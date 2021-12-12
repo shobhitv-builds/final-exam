@@ -51,9 +51,12 @@ void printEncodedFile(const char* fileName, char** encodings){
         exit(1);
     }
     char c;
+    int bitcount = 0;
     while( (c = fgetc(inFile)) != EOF ){
         printf("%s", encodings[(int)c]);
+        bitcount += strlen(encodings[(int)c]);
     }
+    printf("\nNumber of bits: %d\n", bitcount);
     fclose(inFile);
 }
 
