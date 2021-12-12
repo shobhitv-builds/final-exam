@@ -6,19 +6,38 @@
 
 const char* defaultFile = "../res/sample_text.txt";
 
-TreeNode* importFile(const char* fileName){
-    int numChars = 0;
-    TreeNode** data = populateData(fileName, &numChars);
-    Heap* heap = newHeap(numChars, data);
+TreeNode* importFile(const char* fileName, int* numChars){
+    TreeNode** data = populateData(fileName, numChars);
+    Heap* heap = newHeap(*numChars, data);
     TreeNode* tree = getPrefixTree(heap);
     destroyHeap(heap);
     return tree;
 }
 
-int main(const int argc, const char* argv[]){
-    TreeNode* prefixTree = importFile(defaultFile);
-    printTree(prefixTree);
-    destroyTree(prefixTree);
+char** generateEncoding(int numChars, TreeNode* prefixTree){
+    char** encodings = malloc(numChars * sizeof(char*));
+    for(int i = 0; i < numChars; i++){
+        encodings[i] = NULL;
+    }
+    char* buffer = malloc(ALPHABET_SIZE * sizeof(char));
+    getEncoding(prefixTree, buffer, 0, encodings);
+    free(buffer);
 
+    return encodings;
+}
+
+int main(const int argc, const char* argv[]){
+    int numChars = 0;
+    TreeNode* prefixTree = importFile(defaultFile, &numChars);
+    printTree(prefixTree);
+
+    char** encodings = generateEncoding(numChars, prefixTree);
+
+    for(int i = 0; i < ALPHABET_SIZE; i++){
+        if(encodings[i] == NULL) continue;
+        printf("%c encoded to %s\n", i, encodings[i]);
+    }
+
+    destroyTree(prefixTree);
     return 0;
 }

@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ALPHABET_SIZE 256
+#define ALPHABET_SIZE 128
 
 int* getLetterFrequencies(const char* fileName);
 

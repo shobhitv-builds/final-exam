@@ -56,6 +56,27 @@ void destroyTree(TreeNode* node){
     free(node);
 }
 
+void getEncoding(TreeNode* root, char* buffer, int codeLen, char** encodings){
+    if(root == NULL) return;
+
+    buffer[codeLen++] = '0';
+    getEncoding(root->leftSubtree, buffer, codeLen, encodings);
+    codeLen--;
+
+    if(root->letterAscii >= 0){ // Node represents a character
+        encodings[root->letterAscii] = malloc(ALPHABET_SIZE * sizeof(char));
+        int i;
+        for(i = 0; i < codeLen; i++){
+            encodings[root->letterAscii][i] = buffer[i];
+        }
+        encodings[root->letterAscii][i] = '\0';
+    }
+
+    buffer[codeLen++] = '1';
+    getEncoding(root->rightSubtree, buffer, codeLen, encodings);
+    codeLen--;
+}
+
 void printTree(TreeNode* root){
     if(root == NULL) return;
 
@@ -64,8 +85,5 @@ void printTree(TreeNode* root){
 
     if(root->letterAscii >= 0){
         printf("%c has frequency %d\n", root->letterAscii, root->frequency);
-    }
-    else{
-        printf("Parent node, cumulative frequency %d\n", root->frequency);
     }
 }
