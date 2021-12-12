@@ -1,13 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "priority_queue.h"
 #include "binary_tree.h"
 #include "utils.h"
 #include "trie.h"
-
-const char* defaultFile = "../res/sample_text.txt";
-const char* encodedFile = "../res/sample_text_encoded.txt";
-const char* decodedFile = "../res/sample_text_decoded.txt";
 
 TreeNode* importFile(const char* fileName){
     TreeNode** data = populateData(fileName);
@@ -37,21 +34,19 @@ void printEncodings(char** encodings){
 }
 
 void printEncodedFile(const char* fileName, char** encodings){
-    FILE* inFile = fopen(defaultFile, "r");
-    FILE* outFile = fopen(encodedFile, "w+");
-    if(inFile == NULL || outFile == NULL){
+    FILE* inFile = fopen(fileName, "r");
+    if(inFile == NULL){
         printf("Error opening files");
         exit(1);
     }
     char c;
     while( (c = fgetc(inFile)) != EOF ){
-        fprintf(outFile, "%s", encodings[(int)c]);
+        printf("%s", encodings[(int)c]);
     }
     fclose(inFile);
-    fclose(outFile);
 }
 
-Trie* generateDecodeTree(char** encodings){
+Trie* generateDecodeTrie(char** encodings){
     Trie* trie = newTrieNode();
     for(int i = 0; i < ALPHABET_SIZE; i++){
         int letterAscii = i;
@@ -62,40 +57,88 @@ Trie* generateDecodeTree(char** encodings){
     return trie;
 }
 
-void decodeFile(const char* encodedFile, Trie* decodeTrie){
+void printDecodedFile(const char* encodedFile, Trie* decodeTrie){
     FILE* inFile = fopen(encodedFile, "r");
-    FILE* outFile = fopen(decodedFile, "w+");
-
     Trie* curNode = decodeTrie;
 
     char c;
     while( (c = fgetc(inFile)) != EOF){
         int nextIdx = c - '0';
+        if(nextIdx < 0 || nextIdx > 1){
+            printf("Error: Decoded file is not binary\n");
+            exit(1);
+        }
         curNode = curNode->children[nextIdx];
         if(curNode->isTerminal > 0){
-            fprintf(outFile, "%c", (char)curNode->letterAscii);
+            printf("%c", (char)curNode->letterAscii);
             curNode = decodeTrie;
         }
     }
 
     fclose(inFile);
-    fclose(outFile);
 }
 
 int main(const int argc, const char* argv[]){
-    TreeNode* prefixTree = importFile(defaultFile);
-    // printTree(prefixTree);
+    char** encodings = NULL;
 
-    char** encodings = generateEncoding(prefixTree);
-    // printEncodings(encodings);
+    char* prompt = malloc(sizeof(char) * 10);
+    while(1){
+        printf("\n$ ");
+        scanf("%s", prompt);
 
-    printEncodedFile(defaultFile, encodings);
+        if(strcmp(prompt, "import") == 0){
+            char* fileName = malloc(sizeof(char) * 100);
+            scanf("%s", fileName);
+            TreeNode* prefixTree = importFile(fileName);
+            free(fileName);
+            
+            if(encodings != NULL){
+                for(int i = 0; i < ALPHABET_SIZE; i++) free(encodings[i]);
+                free(encodings);
+            }
 
-    Trie* decodeTrie = generateDecodeTree(encodings);
+            encodings = generateEncoding(prefixTree);
+            destroyTree(prefixTree);
+        }
 
-    decodeFile(encodedFile, decodeTrie);
+        else if(strcmp(prompt, "encode") == 0){
+            if(encodings == NULL){
+                printf("Error: No encodings imported\n");
+                continue;
+            }
+            char* fileName = malloc(sizeof(char) * 100);
+            scanf("%s", fileName);
+            printEncodedFile(fileName, encodings);
+            free(fileName);
+        }
+        
+        else if(strcmp(prompt, "decode") == 0){
+            if(encodings == NULL){
+                printf("Error: No encodings imported\n");
+                continue;
+            }
+            Trie* decodeTrie = generateDecodeTrie(encodings);
+            char* fileName = malloc(sizeof(char) * 100);
+            scanf("%s", fileName);
+            printDecodedFile(fileName, decodeTrie);
+            free(fileName);
+            destroyTrie(decodeTrie);
+        }
+        
+        else if(strcmp(prompt, "dump") == 0){
+            if(encodings == NULL){
+                printf("Error: No encodings imported\n");
+                continue;
+            }
+            for(int i = 32; i < 127; i++){
+                printf("%c; %s\n", i, encodings[i]);
+            }
+        }
+        else if(strcmp(prompt, "quit") == 0){
+            break;
+        }
+    }
 
-    for(int i = 0; i < ALPHABET_SIZE; i++) free(encodings[i]);
-    destroyTree(prefixTree);
+    free(prompt);
     return 0;
 }

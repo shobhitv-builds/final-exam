@@ -8,5 +8,5 @@ typedef struct _trieNode{
 } Trie;
 
 Trie* newTrieNode();
-void destroyTrieNode(Trie* node);
+void destroyTrie(Trie* node);
 void insertTrie(Trie* trie, char* binaryString, int letterAscii);

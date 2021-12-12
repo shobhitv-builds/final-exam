@@ -9,8 +9,10 @@ Trie* newTrieNode(){
     return node;
 }
 
-void destroyTrieNode(Trie* node){
-    free(node->children);
+void destroyTrie(Trie* node){
+    if(node == NULL) return;
+    destroyTrie(node->children[0]);
+    destroyTrie(node->children[1]);
     free(node);
 }
 
