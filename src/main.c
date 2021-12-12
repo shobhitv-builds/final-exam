@@ -79,6 +79,13 @@ void printDecodedFile(const char* encodedFile, Trie* decodeTrie){
     fclose(inFile);
 }
 
+void destroyEncodings(char** encodings){
+    if(encodings != NULL){
+        for(int i = 0; i < ALPHABET_SIZE; i++) free(encodings[i]);
+        free(encodings);
+    }
+}
+
 int main(const int argc, const char* argv[]){
     char** encodings = NULL;
 
@@ -93,10 +100,7 @@ int main(const int argc, const char* argv[]){
             TreeNode* prefixTree = importFile(fileName);
             free(fileName);
             
-            if(encodings != NULL){
-                for(int i = 0; i < ALPHABET_SIZE; i++) free(encodings[i]);
-                free(encodings);
-            }
+            destroyEncodings(encodings);
 
             encodings = generateEncoding(prefixTree);
             destroyTree(prefixTree);
@@ -140,6 +144,8 @@ int main(const int argc, const char* argv[]){
         }
     }
 
+    destroyEncodings(encodings);
+    free(encodings);
     free(prompt);
     return 0;
 }
