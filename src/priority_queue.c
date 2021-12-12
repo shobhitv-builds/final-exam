@@ -74,7 +74,7 @@ TreeNode* extractMin(Heap* heap){
     return minNode;
 }
 
-void insert(Heap* heap, TreeNode* node){
+void insertHeap(Heap* heap, TreeNode* node){
     if(heap->heapSize >= heap->capacity){
         printf("Error: Heap overflow");
         exit(1);
@@ -100,7 +100,7 @@ TreeNode* getPrefixTree(Heap* heap){
         TreeNode* node1 = extractMin(heap);
         TreeNode* node2 = extractMin(heap);
         TreeNode* newNode = mergeTreeNodes(node1, node2);
-        insert(heap, newNode);
+        insertHeap(heap, newNode);
     }
     TreeNode* root = extractMin(heap);
     return root;

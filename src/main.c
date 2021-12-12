@@ -3,8 +3,10 @@
 #include "priority_queue.h"
 #include "binary_tree.h"
 #include "utils.h"
+#include "trie.h"
 
 const char* defaultFile = "../res/sample_text.txt";
+const char* encodedFile = "../res/sample_text_encoded.txt";
 
 TreeNode* importFile(const char* fileName){
     TreeNode** data = populateData(fileName);
@@ -34,12 +36,26 @@ void printEncodings(char** encodings){
 }
 
 void printEncodedFile(const char* fileName, char** encodings){
-    FILE* file = fopen(defaultFile, "r");
-    char c;
-    while( (c = fgetc(file)) != EOF ){
-        printf("%s", encodings[(int)c]);
+    FILE* inFile = fopen(defaultFile, "r");
+    FILE* outFile = fopen(encodedFile, "w+");
+    if(inFile == NULL || outFile == NULL){
+        printf("Error opening files");
+        exit(1);
     }
-    fclose(file);
+    char c;
+    while( (c = fgetc(inFile)) != EOF ){
+        fprintf(outFile, "%s", encodings[(int)c]);
+    }
+    fclose(inFile);
+}
+
+void generateDecodeTree(char** encodings){
+    Trie* trie = newTrieNode();
+    for(int i = 0; i < ALPHABET_SIZE; i++){
+        int letterAscii = i;
+        char* encoding = encodings[i];
+        insertTrie(trie, encoding, letterAscii);
+    }
 }
 
 int main(const int argc, const char* argv[]){
@@ -50,6 +66,8 @@ int main(const int argc, const char* argv[]){
     // printEncodings(encodings);
 
     printEncodedFile(defaultFile, encodings);
+
+    generateDecodeTree(encodings);
 
     for(int i = 0; i < ALPHABET_SIZE; i++) free(encodings[i]);
     destroyTree(prefixTree);

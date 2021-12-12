@@ -17,7 +17,7 @@ void destroyHeap(Heap* heap);
 void heapify(Heap* heap, int idx);
 void buildMinHeap(Heap* heap);
 TreeNode* extractMin(Heap* heap);
-void insert(Heap* heap, TreeNode* node);
+void insertHeap(Heap* heap, TreeNode* node);
 void swap(Heap* heap, int idx1, int idx2);
 
 TreeNode* getPrefixTree(Heap* heap);
