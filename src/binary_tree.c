@@ -32,18 +32,12 @@ TreeNode* mergeTreeNodes(TreeNode* node_0, TreeNode* node_1){
     return node;
 }
 
-TreeNode** populateData(const char* fileName, int* numChars){
+TreeNode** populateData(const char* fileName){
     int* letterCounts = getLetterFrequencies(fileName);
 
+    TreeNode** arr = malloc(ALPHABET_SIZE * sizeof(TreeNode*));
     for(int i = 0; i < ALPHABET_SIZE; i++){
-        if(letterCounts[i] > 0) (*numChars)++;
-    }
-
-    TreeNode** arr = malloc((*numChars) * sizeof(TreeNode*));
-    int idx = 0;
-    for(int i = 0; i < ALPHABET_SIZE; i++){
-        if(letterCounts[i] <= 0) continue;
-        arr[idx++] = newTreeNode((char) i, letterCounts[i]);
+        arr[i] = newTreeNode((char) i, letterCounts[i]);
     }
 
     return arr;
