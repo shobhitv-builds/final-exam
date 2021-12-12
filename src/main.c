@@ -6,26 +6,6 @@
 #include "utils.h"
 #include "trie.h"
 
-TreeNode* importFile(const char* fileName){
-    TreeNode** data = populateData(fileName);
-    Heap* heap = newHeap(ALPHABET_SIZE, data);
-    TreeNode* tree = getPrefixTree(heap);
-    destroyHeap(heap);
-    free(data);
-    return tree;
-}
-
-char** generateEncoding(TreeNode* prefixTree){
-    char** encodings = malloc(ALPHABET_SIZE * sizeof(char*));
-    for(int i = 0; i < ALPHABET_SIZE; i++){
-        encodings[i] = NULL;
-    }
-    char* buffer = malloc(ALPHABET_SIZE * sizeof(char));
-    getEncoding(prefixTree, buffer, 0, encodings);
-    free(buffer);
-
-    return encodings;
-}
 
 void printEncodings(char** encodings){
     for(int i = 0; i < ALPHABET_SIZE; i++){
@@ -101,13 +81,9 @@ int main(const int argc, const char* argv[]){
         if(strcmp(prompt, "import") == 0){
             char* fileName = malloc(sizeof(char) * 100);
             scanf("%s", fileName);
-            TreeNode* prefixTree = importFile(fileName);
-            free(fileName);
-            
             destroyEncodings(encodings);
-
-            encodings = generateEncoding(prefixTree);
-            destroyTree(prefixTree);
+            encodings = generateEncodingFromFile(fileName);
+            free(fileName);
         }
 
         else if(strcmp(prompt, "encode") == 0){

@@ -17,3 +17,22 @@ int* getLetterFrequencies(const char* fileName){
     fclose(file);
     return frequencies;
 }
+
+char** generateEncodingFromFile(const char* fileName){
+    TreeNode** data = populateData(fileName);
+    Heap* heap = newHeap(ALPHABET_SIZE, data);
+    TreeNode* prefixTree = getPrefixTree(heap);
+
+    char** encodings = malloc(ALPHABET_SIZE * sizeof(char*));
+    for(int i = 0; i < ALPHABET_SIZE; i++){
+        encodings[i] = NULL;
+    }
+    char* buffer = malloc(ALPHABET_SIZE * sizeof(char));
+    getEncoding(prefixTree, buffer, 0, encodings);
+    free(buffer);
+
+    destroyHeap(heap);
+    destroyTree(prefixTree);
+    free(data);
+    return encodings;
+}
