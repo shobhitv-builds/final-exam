@@ -40,6 +40,7 @@ TreeNode** populateData(const char* fileName){
         arr[i] = newTreeNode((char) i, letterCounts[i]);
     }
 
+    free(letterCounts);
     return arr;
 }
 

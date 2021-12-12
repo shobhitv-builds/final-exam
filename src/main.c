@@ -11,6 +11,7 @@ TreeNode* importFile(const char* fileName){
     Heap* heap = newHeap(ALPHABET_SIZE, data);
     TreeNode* tree = getPrefixTree(heap);
     destroyHeap(heap);
+    free(data);
     return tree;
 }
 
