@@ -1,10 +1,12 @@
 #include "priority_queue.h"
 #include "binary_tree.h"
+#include "utils.h"
 
 Heap* newHeap(int size, TreeNode** nodes){
     Heap* heap = malloc(sizeof(Heap));
     heap->heapSize = size;
     heap->data = nodes;
+    heap->capacity = ALPHABET_SIZE;
 
     buildMinHeap(heap);
 
@@ -86,6 +88,20 @@ void insert(Heap* heap, TreeNode* node){
         idx = parentIdx;
         parentIdx = parent(parentIdx);
     }
+}
+
+TreeNode* getPrefixTree(Heap* heap){
+    if(heap->heapSize < 1){
+        printf("Error: Heap empty\n");
+        exit(1);
+    }
+    while(heap->heapSize > 1){
+        TreeNode* node1 = extractMin(heap);
+        TreeNode* node2 = extractMin(heap);
+        TreeNode* newNode = mergeTreeNodes(node1, node2);
+        insert(heap, newNode);
+    }
+    return heap->data[0];
 }
 
 void swap(Heap* heap, int idx1, int idx2){

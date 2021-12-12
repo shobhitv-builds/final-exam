@@ -20,6 +20,9 @@ TreeNode* extractMin(Heap* heap);
 void insert(Heap* heap, TreeNode* node);
 void swap(Heap* heap, int idx1, int idx2);
 
+TreeNode* getPrefixTree(Heap* heap);
+
+
 #define leftChild(idx) ((idx << 1) + 1)
 #define rightChild(idx) ((idx << 1) + 2)
 #define parent(idx) ((idx - 1) >> 1)

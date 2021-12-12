@@ -55,3 +55,17 @@ void destroyTreeNode(TreeNode* node){
     destroyTreeNode(node->rightSubtree);
     free(node);
 }
+
+void printTree(TreeNode* root){
+    if(root == NULL) return;
+
+    printTree(root->leftSubtree);
+    printTree(root->rightSubtree);
+
+    if(root->letterAscii >= 0){
+        printf("%c has frequency %d\n", root->letterAscii, root->frequency);
+    }
+    else{
+        printf("Parent node, cumulative frequency %d\n", root->frequency);
+    }
+}

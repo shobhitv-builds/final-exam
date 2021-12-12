@@ -12,8 +12,10 @@ typedef struct _treeNode{
 } TreeNode;
 
 TreeNode* newTreeNode(char letter, int frequency);
+TreeNode* mergeTreeNodes(TreeNode* node_0, TreeNode* node_1);
 TreeNode** populateData(const char* fileName, int* numChars);
 void destroyTreeNode(TreeNode* root);
+void printTree(TreeNode* root);
 
 #define key(node) node->frequency
 
