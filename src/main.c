@@ -66,10 +66,14 @@ void printDecodedFile(const char* encodedFile, Trie* decodeTrie){
     while( (c = fgetc(inFile)) != EOF){
         int nextIdx = c - '0';
         if(nextIdx < 0 || nextIdx > 1){
-            printf("Error: Decoded file is not binary\n");
+            printf("Error: Decoded file is not binary.\n");
             exit(1);
         }
         curNode = curNode->children[nextIdx];
+        if(curNode == NULL){
+            printf("Error: Encoding invalid.\n");
+            exit(1);
+        }
         if(curNode->isTerminal > 0){
             printf("%c", (char)curNode->letterAscii);
             curNode = decodeTrie;
