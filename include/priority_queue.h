@@ -1,27 +1,27 @@
+#ifndef PQUEUE_INC
+#define PQUEUE_INC
+
 #include <stdio.h>
 #include <stdlib.h>
-#include "utils.h"
-
-typedef struct _node {
-    int             key;
-    char            letter;
-    bool            isCoarseNode;
-    struct _node*   leftSubtree;
-    struct _node*   rightSubtree;
-} HeapNode;
-
-HeapNode* newHeapNode();
-void destroyNode(HeapNode* node);
+#include "binary_tree.h"
 
 typedef struct _heap{
     int heapSize;
-    HeapNode* heap;
+    int capacity;
+    TreeNode** data;
 } Heap;
 
-Heap* newHeap(int capacity, HeapNode* heap);
+Heap* newHeap(int size, TreeNode** nodes);
 void destroyHeap(Heap* heap);
 
 void heapify(Heap* heap, int idx);
 void buildMinHeap(Heap* heap);
-HeapNode* extractMin(Heap* heap);
-void insert(Heap* heap, HeapNode* node);
+TreeNode* extractMin(Heap* heap);
+void insert(Heap* heap, TreeNode* node);
+void swap(Heap* heap, int idx1, int idx2);
+
+#define leftChild(idx) ((idx << 1) + 1)
+#define rightChild(idx) ((idx << 1) + 2)
+#define parent(idx) ((idx - 1) >> 1)
+
+#endif

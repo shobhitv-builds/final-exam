@@ -12,7 +12,7 @@ int* getLetterFrequencies(const char* fileName){
     
     char c;
     while( (c = fgetc(file)) != EOF){
-        frequencies[(unsigned int)c]++;
+        frequencies[(int)c]++;
     }
     fclose(file);
     return frequencies;
