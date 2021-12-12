@@ -36,3 +36,55 @@ char** generateEncodingFromFile(const char* fileName){
     free(data);
     return encodings;
 }
+
+void printEncodings(char** encodings){
+    for(int i = 0; i < ALPHABET_SIZE; i++){
+        if(encodings[i] == NULL) continue;
+        printf("%c encoded to %s\n", i, encodings[i]);
+    }
+}
+
+void printEncodedFile(const char* fileName, char** encodings){
+    FILE* inFile = fopen(fileName, "r");
+    if(inFile == NULL){
+        printf("Error opening files");
+        exit(1);
+    }
+    char c;
+    while( (c = fgetc(inFile)) != EOF ){
+        printf("%s", encodings[(int)c]);
+    }
+    fclose(inFile);
+}
+
+void printDecodedFile(const char* encodedFile, Trie* decodeTrie){
+    FILE* inFile = fopen(encodedFile, "r");
+    Trie* curNode = decodeTrie;
+
+    char c;
+    while( (c = fgetc(inFile)) != EOF){
+        int nextIdx = c - '0';
+        if(nextIdx < 0 || nextIdx > 1){
+            printf("Warning: Decoded file is not binary: %c\n", c);
+            continue;
+        }
+        curNode = curNode->children[nextIdx];
+        if(curNode == NULL){
+            printf("Error: Encoding invalid.\n");
+            exit(1);
+        }
+        if(curNode->isTerminal > 0){
+            printf("%c", (char)curNode->letterAscii);
+            curNode = decodeTrie;
+        }
+    }
+
+    fclose(inFile);
+}
+
+void destroyEncodings(char** encodings){
+    if(encodings != NULL){
+        for(int i = 0; i < ALPHABET_SIZE; i++) free(encodings[i]);
+        free(encodings);
+    }
+}

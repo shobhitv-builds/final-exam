@@ -31,3 +31,14 @@ void insertTrie(Trie* trie, char* binaryString, int letter){
     root->isTerminal = 1;
     root->letterAscii = letter;
 }
+
+Trie* generateDecodeTrie(char** encodings){
+    Trie* trie = newTrieNode();
+    for(int i = 0; i < ALPHABET_SIZE; i++){
+        int letterAscii = i;
+        char* encoding = encodings[i];
+        insertTrie(trie, encoding, letterAscii);
+    }
+
+    return trie;
+}

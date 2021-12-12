@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "utils.h"
 
 typedef struct _trieNode{
     int isTerminal;
@@ -13,5 +14,5 @@ typedef struct _trieNode{
 Trie* newTrieNode();
 void destroyTrie(Trie* node);
 void insertTrie(Trie* trie, char* binaryString, int letterAscii);
-
+Trie* generateDecodeTrie(char** encodings);
 #endif
