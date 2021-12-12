@@ -1,4 +1,5 @@
 #include "trie.h"
+#include "utils.h"
 
 Trie* newTrieNode(){
     Trie* node = (Trie*) malloc(sizeof(Trie));

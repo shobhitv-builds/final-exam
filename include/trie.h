@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "utils.h"
 
 typedef struct _trieNode{
     int isTerminal;
