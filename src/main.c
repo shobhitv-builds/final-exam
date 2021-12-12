@@ -7,6 +7,7 @@
 
 const char* defaultFile = "../res/sample_text.txt";
 const char* encodedFile = "../res/sample_text_encoded.txt";
+const char* decodedFile = "../res/sample_text_decoded.txt";
 
 TreeNode* importFile(const char* fileName){
     TreeNode** data = populateData(fileName);
@@ -47,15 +48,38 @@ void printEncodedFile(const char* fileName, char** encodings){
         fprintf(outFile, "%s", encodings[(int)c]);
     }
     fclose(inFile);
+    fclose(outFile);
 }
 
-void generateDecodeTree(char** encodings){
+Trie* generateDecodeTree(char** encodings){
     Trie* trie = newTrieNode();
     for(int i = 0; i < ALPHABET_SIZE; i++){
         int letterAscii = i;
         char* encoding = encodings[i];
         insertTrie(trie, encoding, letterAscii);
     }
+
+    return trie;
+}
+
+void decodeFile(const char* encodedFile, Trie* decodeTrie){
+    FILE* inFile = fopen(encodedFile, "r");
+    FILE* outFile = fopen(decodedFile, "w+");
+
+    Trie* curNode = decodeTrie;
+
+    char c;
+    while( (c = fgetc(inFile)) != EOF){
+        int nextIdx = c - '0';
+        curNode = curNode->children[nextIdx];
+        if(curNode->isTerminal > 0){
+            fprintf(outFile, "%c", (char)curNode->letterAscii);
+            curNode = decodeTrie;
+        }
+    }
+
+    fclose(inFile);
+    fclose(outFile);
 }
 
 int main(const int argc, const char* argv[]){
@@ -67,7 +91,9 @@ int main(const int argc, const char* argv[]){
 
     printEncodedFile(defaultFile, encodings);
 
-    generateDecodeTree(encodings);
+    Trie* decodeTrie = generateDecodeTree(encodings);
+
+    decodeFile(encodedFile, decodeTrie);
 
     for(int i = 0; i < ALPHABET_SIZE; i++) free(encodings[i]);
     destroyTree(prefixTree);
