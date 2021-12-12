@@ -13,6 +13,7 @@ void destroyTrie(Trie* node){
     if(node == NULL) return;
     destroyTrie(node->children[0]);
     destroyTrie(node->children[1]);
+    free(node->children);
     free(node);
 }
 

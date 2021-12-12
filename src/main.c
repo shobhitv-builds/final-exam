@@ -145,7 +145,6 @@ int main(const int argc, const char* argv[]){
     }
 
     destroyEncodings(encodings);
-    free(encodings);
     free(prompt);
     return 0;
 }
