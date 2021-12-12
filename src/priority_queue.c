@@ -15,7 +15,7 @@ Heap* newHeap(int size, TreeNode** nodes){
 
 void destroyHeap(Heap* heap){
     for(int i = 0; i < heap->heapSize; i++){
-        destroyTreeNode(heap->data[i]);
+        destroyTree(heap->data[i]);
     }
     free(heap);
 }
@@ -67,6 +67,7 @@ TreeNode* extractMin(Heap* heap){
     }
     TreeNode* minNode = heap->data[0];
     swap(heap, 0, heap->heapSize - 1);
+    heap->data[heap->heapSize - 1] = NULL;
     heap->heapSize -= 1;
     if(heap->heapSize > 0) heapify(heap, 0);
 
@@ -101,7 +102,8 @@ TreeNode* getPrefixTree(Heap* heap){
         TreeNode* newNode = mergeTreeNodes(node1, node2);
         insert(heap, newNode);
     }
-    return heap->data[0];
+    TreeNode* root = extractMin(heap);
+    return root;
 }
 
 void swap(Heap* heap, int idx1, int idx2){

@@ -49,10 +49,10 @@ TreeNode** populateData(const char* fileName, int* numChars){
     return arr;
 }
 
-void destroyTreeNode(TreeNode* node){
+void destroyTree(TreeNode* node){
     if(node == NULL) return;
-    destroyTreeNode(node->leftSubtree);
-    destroyTreeNode(node->rightSubtree);
+    destroyTree(node->leftSubtree);
+    destroyTree(node->rightSubtree);
     free(node);
 }
 

@@ -4,20 +4,21 @@
 #include "binary_tree.h"
 #include "utils.h"
 
-const char* fileName = "../res/sample_text.txt";
+const char* defaultFile = "../res/sample_text.txt";
 
-int main(const int argc, const char* argv[]){
+TreeNode* importFile(const char* fileName){
     int numChars = 0;
     TreeNode** data = populateData(fileName, &numChars);
-    printf("%d characters:\n", numChars);
-    for(int i = 0; i < numChars; i++){
-        printf("(%d) : %c has freq %d\n", i, data[i]->letterAscii, data[i]->frequency);
-    }
-
     Heap* heap = newHeap(numChars, data);
-    printf("Heap order:\n");
-    for(int i = 0; i < numChars; i++){
-        printf("(%d) : %c has freq %d\n", heap->data[i]->letterAscii, heap->data[i]->letterAscii, heap->data[i]->frequency);
-    }
+    TreeNode* tree = getPrefixTree(heap);
+    destroyHeap(heap);
+    return tree;
+}
+
+int main(const int argc, const char* argv[]){
+    TreeNode* prefixTree = importFile(defaultFile);
+    printTree(prefixTree);
+    destroyTree(prefixTree);
+
     return 0;
 }
